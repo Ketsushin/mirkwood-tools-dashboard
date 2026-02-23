@@ -11,7 +11,7 @@ export class MWD_Dashboard extends FormApplication {
       height: 760,
       resizable: true,
       classes: ["mwd-app"],
-      closeOnSubmit: false // <<< wichtig: Fenster bleibt offen
+      closeOnSubmit: false
     });
   }
 
@@ -103,9 +103,10 @@ export class MWD_Dashboard extends FormApplication {
     }
 
     if (action === "renameProfile") {
+      const safeName = encode(active.name);
       const name = await Dialog.prompt({
         title: game.i18n.localize("MWD.RenameProfile"),
-        content: `<p>Neuer Name:</p><input type="text" name="name" value="${foundry.utils.escapeHTML(active.name)}"/>`,
+        content: `<p>Neuer Name:</p><input type="text" name="name" value="${safeName}"/>`,
         label: game.i18n.localize("MWD.Save"),
         callback: html => html.find('input[name="name"]').val()
       });
@@ -119,9 +120,10 @@ export class MWD_Dashboard extends FormApplication {
         ui.notifications.warn("Mindestens ein Profil muss existieren.");
         return;
       }
+      const safeName = encode(active.name);
       const yes = await Dialog.confirm({
         title: game.i18n.localize("MWD.DeleteProfile"),
-        content: `<p>Profil "${foundry.utils.escapeHTML(active.name)}" wirklich löschen?</p>`
+        content: `<p>Profil "${safeName}" wirklich löschen?</p>`
       });
       if (!yes) return;
 
@@ -155,15 +157,19 @@ export class MWD_Dashboard extends FormApplication {
         ui.notifications.warn("Mindestens eine Region muss existieren.");
         return;
       }
+
       const region = active.regions.find(r => r.id === rid);
+      const safeRegionName = encode(region?.name ?? "");
+
       const yes = await Dialog.confirm({
         title: game.i18n.localize("MWD.RemoveRegion"),
-        content: `<p>Region "${foundry.utils.escapeHTML(region?.name ?? "")}" entfernen?</p>`
+        content: `<p>Region "${safeRegionName}" entfernen?</p>`
       });
       if (!yes) return;
 
       active.regions = active.regions.filter(r => r.id !== rid);
       await setState(state);
+
       this._activeRegionId = active.regions[0].id;
       return this.render();
     }
@@ -240,7 +246,6 @@ export class MWD_Dashboard extends FormApplication {
                 await setState(parsed);
                 ui.notifications.info("Import erfolgreich.");
 
-                // region selection neu setzen
                 const active = findActiveProfile(parsed);
                 this._activeRegionId = active.regions?.[0]?.id ?? null;
 
@@ -294,7 +299,6 @@ export class MWD_Dashboard extends FormApplication {
       this._activeRegionId = nowActive.regions?.[0]?.id ?? null;
     }
 
-    // bleibt offen und rendert neu
     this.render();
   }
 }
@@ -306,4 +310,11 @@ function readFileAsText(file) {
     reader.onload = () => resolve(String(reader.result ?? ""));
     reader.readAsText(file);
   });
+}
+
+/**
+ * V12 safe HTML encoding for inserting user strings into dialog HTML.
+ */
+function encode(str) {
+  return TextEditor.encodeHTML(String(str ?? ""));
 }

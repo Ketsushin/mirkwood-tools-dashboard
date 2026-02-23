@@ -1,5 +1,5 @@
 {
-  "MWD.ModuleName": "Mirkwood World Dashboard",
+  "MWD.ModuleName": "Mirkwood Tools Dashboard",
   "MWD.OpenDashboard": "Dashboard öffnen",
   "MWD.SceneButton": "World Dashboard",
   "MWD.ActiveProfile": "Aktives Profil",
@@ -24,7 +24,6 @@
   "MWD.Unrest": "Unruhe (0–5)",
   "MWD.Supply": "Versorgung (0–5)",
   "MWD.Notes": "Notizen",
-  "MWD.PriceModifier": "Marktpreis-Modifikator",
   "MWD.Availability": "Warenverfügbarkeit",
   "MWD.SmuggleChance": "Schmuggelwahrscheinlichkeit",
   "MWD.SmuggleDetection": "Entdeckungsrisiko",
