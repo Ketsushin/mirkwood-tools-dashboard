@@ -20,19 +20,26 @@ export function defaultProfile(name = "Wilderland") {
     name,
     globals: { shadow: 4, war: 1 },
     params: {
+      // Market
       pricePerDanger: 5,
+
+      // Availability
       availMinusPerDanger: 15,
       availPlusPerSupply: 10,
+
+      // Smuggling
       smugglePerDanger: 10,
       smugglePerUnrest: 5,
       smugglePerWar: 5,
       smugglePerSupplyBelow3: 10,
+
+      // Detection
       detectPerDanger: 5,
       detectPerUnrest: 5,
       detectPerWar: 5
     },
     speciesMatrix: {
-      // optional, frei erweiterbar:
+      // Optional, frei erweiterbar:
       // "Elf->Dwarf": -2
     },
     regions: [

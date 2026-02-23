@@ -1,12 +1,10 @@
 {
   "id": "mirkwood-tools-dashboard",
   "title": "Mirkwood Tools Dashboard",
-  "description": "GM-Weltzustands-Dashboard mit Profilen und automatischen Ableitungen.",
-  "version": "1.0.1",
+  "description": "GM-Weltzustands-Dashboard mit Profilen, Regionen und automatischen Ableitungen (Preise, Verfügbarkeit, Schmuggel, NSC-Haltung).",
+  "version": "1.0.3",
   "authors": [
-    {
-      "name": "Ketsushin"
-    }
+    { "name": "Ketsushin" }
   ],
   "compatibility": {
     "minimum": "11",
@@ -19,18 +17,10 @@
     "styles/dashboard.css"
   ],
   "languages": [
-    {
-      "lang": "de",
-      "name": "Deutsch",
-      "path": "languages/de.json"
-    },
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
+    { "lang": "de", "name": "Deutsch", "path": "languages/de.json" },
+    { "lang": "en", "name": "English", "path": "languages/en.json" }
   ],
   "url": "https://github.com/Ketsushin/mirkwood-tools-dashboard",
   "manifest": "https://raw.githubusercontent.com/Ketsushin/mirkwood-tools-dashboard/main/module.json",
-  "download": "https://github.com/Ketsushin/mirkwood-tools-dashboard/releases/download/v1.0.1/mirkwood-tools-dashboard-1.0.1.zip"
+  "download": "https://github.com/Ketsushin/mirkwood-tools-dashboard/releases/download/v1.0.3/mirkwood-tools-dashboard-1.0.3.zip"
 }

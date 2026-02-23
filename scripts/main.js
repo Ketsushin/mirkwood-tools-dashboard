@@ -26,7 +26,6 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
   if (!game.user.isGM) return;
 
-  // Scene Controls Button
   Hooks.on("getSceneControlButtons", controls => {
     controls.push({
       name: "mwd",
@@ -46,7 +45,6 @@ Hooks.once("ready", () => {
   });
 });
 
-// Convenience API (optional)
 Hooks.once("setup", () => {
   game.mwd = {
     open: () => new MWD_Dashboard().render(true)

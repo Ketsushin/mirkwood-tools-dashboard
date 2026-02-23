@@ -10,7 +10,8 @@ export class MWD_Dashboard extends FormApplication {
       width: 980,
       height: 760,
       resizable: true,
-      classes: ["mwd-app"]
+      classes: ["mwd-app"],
+      closeOnSubmit: false // <<< wichtig: Fenster bleibt offen
     });
   }
 
@@ -24,7 +25,6 @@ export class MWD_Dashboard extends FormApplication {
     this._state = await getState();
     const active = findActiveProfile(this._state);
 
-    // ensure active region selection
     if (!this._activeRegionId || !active.regions.some(r => r.id === this._activeRegionId)) {
       this._activeRegionId = active.regions?.[0]?.id ?? null;
     }
@@ -36,27 +36,26 @@ export class MWD_Dashboard extends FormApplication {
       isActive: p.id === this._state.activeProfileId
     }));
 
-    // decorate regions
     active.regions = active.regions.map(r => ({ ...r, isActive: r.id === this._activeRegionId }));
 
-    const derived = activeRegion ? computeDerived({ profile: active, region: activeRegion }) : null;
+    const derivedRaw = activeRegion ? computeDerived({ profile: active, region: activeRegion }) : null;
 
-    return {
-      profiles,
-      active,
-      activeRegion,
-      derived: derived
-        ? {
-            priceLabel: `${Math.round(derived.pricePct)}%`,
-            availLabel: `${Math.round(derived.availability)}%`,
-            smuggleLabel: `${Math.round(derived.smuggle)}%`,
-            detectLabel: `${Math.round(derived.detect)}%`,
-            attitudeLabel: derived.attitudeLabel,
-            attitudeClass: derived.attitudeClass,
-            attitudeReason: derived.reason
-          }
-        : null
-    };
+    const derived = derivedRaw
+      ? {
+          marketLabel: `${Math.round(derivedRaw.marketPct)}%`,
+          buyFactorLabel: `${derivedRaw.buyFactor.toFixed(2)}×`,
+          sellLabel: `${Math.round(derivedRaw.sellFactor * 100)}% vom Basispreis`,
+          sellFactorLabel: `${derivedRaw.sellFactor.toFixed(2)}×`,
+          availLabel: `${Math.round(derivedRaw.availability)}%`,
+          smuggleLabel: `${Math.round(derivedRaw.smuggle)}%`,
+          detectLabel: `${Math.round(derivedRaw.detect)}%`,
+          attitudeLabel: derivedRaw.attitudeLabel,
+          attitudeClass: derivedRaw.attitudeClass,
+          attitudeReason: derivedRaw.reason
+        }
+      : null;
+
+    return { profiles, active, activeRegion, derived };
   }
 
   activateListeners(html) {
@@ -74,7 +73,6 @@ export class MWD_Dashboard extends FormApplication {
   async _onAction(ev) {
     const action = ev.currentTarget.dataset.action;
     const state = await getState();
-
     const active = findActiveProfile(state);
 
     if (action === "newProfile") {
@@ -178,30 +176,7 @@ export class MWD_Dashboard extends FormApplication {
     }
 
     if (action === "import") {
-      const picked = await FilePicker.browse("data", "", { wildcard: true });
-      const content = await Dialog.prompt({
-        title: game.i18n.localize("MWD.Import"),
-        content: `
-          <p>Importiere JSON:</p>
-          <p class="mwd-small">Tipp: Lege die Datei in Data/ oder kopiere JSON in das Feld.</p>
-          <textarea name="json" rows="12" style="width:100%"></textarea>
-        `,
-        label: game.i18n.localize("MWD.Save"),
-        callback: html => html.find('textarea[name="json"]').val()
-      });
-
-      try {
-        const parsed = JSON.parse(content);
-        if (!parsed?.profiles?.length) throw new Error("Ungültiges Format.");
-        await setState(parsed);
-        ui.notifications.info("Import erfolgreich.");
-        this._activeRegionId = findActiveProfile(parsed).regions[0].id;
-        return this.render();
-      } catch (e) {
-        console.error(e);
-        ui.notifications.error(`Import fehlgeschlagen: ${e.message}`);
-      }
-      return;
+      return this._showImportDialog();
     }
 
     if (action === "assignScene") {
@@ -221,10 +196,72 @@ export class MWD_Dashboard extends FormApplication {
     }
   }
 
+  async _showImportDialog() {
+    const content = `
+      <p>JSON Import:</p>
+      <div class="form-group">
+        <label>Datei auswählen</label>
+        <div class="form-fields">
+          <input type="file" name="jsonfile" accept="application/json"/>
+        </div>
+        <p class="hint">Empfohlen: Datei auswählen. Alternativ kannst du JSON unten einfügen.</p>
+      </div>
+      <div class="form-group">
+        <label>Oder JSON einfügen</label>
+        <textarea name="jsontext" rows="10" style="width:100%"></textarea>
+      </div>
+    `;
+
+    return new Promise(resolve => {
+      new Dialog({
+        title: game.i18n.localize("MWD.Import"),
+        content,
+        buttons: {
+          import: {
+            label: game.i18n.localize("MWD.Save"),
+            callback: async html => {
+              try {
+                const fileInput = html.find('input[name="jsonfile"]')[0];
+                const textAreaVal = String(html.find('textarea[name="jsontext"]').val() ?? "").trim();
+
+                let jsonString = "";
+
+                if (fileInput?.files?.length) {
+                  jsonString = await readFileAsText(fileInput.files[0]);
+                } else if (textAreaVal.length) {
+                  jsonString = textAreaVal;
+                } else {
+                  throw new Error("Keine Datei gewählt und kein JSON eingefügt.");
+                }
+
+                const parsed = JSON.parse(jsonString);
+                if (!parsed?.profiles?.length) throw new Error("Ungültiges Format (profiles fehlt).");
+
+                await setState(parsed);
+                ui.notifications.info("Import erfolgreich.");
+
+                // region selection neu setzen
+                const active = findActiveProfile(parsed);
+                this._activeRegionId = active.regions?.[0]?.id ?? null;
+
+                this.render();
+              } catch (e) {
+                console.error(e);
+                ui.notifications.error(`Import fehlgeschlagen: ${e.message}`);
+              }
+              resolve();
+            }
+          },
+          cancel: { label: game.i18n.localize("MWD.Cancel"), callback: () => resolve() }
+        },
+        default: "import"
+      }).render(true);
+    });
+  }
+
   async _updateObject(_event, formData) {
     const state = await getState();
 
-    // active profile id (dropdown)
     const newActiveId = formData["activeProfileId"];
     if (newActiveId && state.profiles.some(p => p.id === newActiveId)) {
       state.activeProfileId = newActiveId;
@@ -232,17 +269,14 @@ export class MWD_Dashboard extends FormApplication {
 
     const active = findActiveProfile(state);
 
-    // globals
     active.globals.shadow = clampNumber(formData["globals.shadow"], 0, 10, active.globals.shadow);
     active.globals.war = clampNumber(formData["globals.war"], 0, 5, active.globals.war);
 
-    // params
     for (const key of Object.keys(active.params)) {
       const path = `params.${key}`;
       if (formData[path] !== undefined) active.params[key] = Number(formData[path]);
     }
 
-    // region edits
     const rid = this._activeRegionId;
     const region = active.regions.find(r => r.id === rid);
     if (region) {
@@ -255,12 +289,21 @@ export class MWD_Dashboard extends FormApplication {
 
     await setState(state);
 
-    // If user switched active profile, ensure region selection exists
     const nowActive = findActiveProfile(state);
     if (!nowActive.regions.some(r => r.id === this._activeRegionId)) {
       this._activeRegionId = nowActive.regions?.[0]?.id ?? null;
     }
 
+    // bleibt offen und rendert neu
     this.render();
   }
+}
+
+function readFileAsText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Datei konnte nicht gelesen werden."));
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.readAsText(file);
+  });
 }

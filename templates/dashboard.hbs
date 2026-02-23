@@ -144,8 +144,14 @@
         <h3>{{localize "MWD.Derived"}}</h3>
         <div class="mwd-derived">
           <div>
-            <div class="mwd-small">{{localize "MWD.PriceModifier"}}</div>
-            <div class="mwd-badge">{{derived.priceLabel}}</div>
+            <div class="mwd-small">Marktpreis (Einkauf)</div>
+            <div class="mwd-badge">{{derived.marketLabel}}</div>
+            <div class="mwd-small">Faktor: {{derived.buyFactorLabel}}</div>
+          </div>
+          <div>
+            <div class="mwd-small">Verkauf (Option B)</div>
+            <div class="mwd-badge">{{derived.sellLabel}}</div>
+            <div class="mwd-small">Faktor: {{derived.sellFactorLabel}} (0.5 × Markt)</div>
           </div>
           <div>
             <div class="mwd-small">{{localize "MWD.Availability"}}</div>

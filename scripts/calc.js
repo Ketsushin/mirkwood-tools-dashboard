@@ -5,6 +5,10 @@ import { clampNumber } from "./storage.js";
  * globals: shadow(0-10), war(0-5)
  * region: danger(0-5), unrest(0-5), supply(0-5)
  * params: see defaults
+ *
+ * Option B:
+ * - Buy factor  = marketPct/100
+ * - Sell factor = 0.5 * (marketPct/100)
  */
 export function computeDerived({ profile, region }) {
   const g = profile.globals;
@@ -27,7 +31,11 @@ export function computeDerived({ profile, region }) {
   else if (supply === 4) supplyPrice = -5;
   else if (supply === 5) supplyPrice = -10;
 
-  const pricePct = 100 + dangerPrice + supplyPrice;
+  const marketPct = 100 + dangerPrice + supplyPrice;
+
+  // Option B factors
+  const buyFactor = marketPct / 100;
+  const sellFactor = 0.5 * buyFactor; // 50% baseline * market
 
   // Availability
   const availability = clampNumber(
@@ -72,15 +80,16 @@ export function computeDerived({ profile, region }) {
   // Low supply makes merchants less friendly (small)
   if (supply <= 1) attitudeScore -= 1;
 
-  // War tension makes armed strangers more suspicious: baseline -1 if war>=3
+  // War tension makes strangers more suspicious at baseline
   if (war >= 3) attitudeScore -= 1;
 
   const { attitudeLabel, attitudeClass } = mapAttitude(attitudeScore);
-
   const reason = `Score ${attitudeScore} (Schatten ${shadow}, Unruhe ${unrest}, Versorgung ${supply}, Krieg ${war})`;
 
   return {
-    pricePct,
+    marketPct,
+    buyFactor,
+    sellFactor,
     availability,
     smuggle,
     detect,
