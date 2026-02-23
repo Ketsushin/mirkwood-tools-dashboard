@@ -1,5 +1,5 @@
 export const MWD = {
-  MODULE_ID: "mirkwood-world-dashboard",
+  MODULE_ID: "mirkwood-tools-dashboard",
   SETTINGS_KEY: "worldState",
   ACTIVE_PROFILE_KEY: "activeProfileId"
 };
