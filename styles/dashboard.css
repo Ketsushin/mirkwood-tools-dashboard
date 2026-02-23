@@ -1,26 +1,34 @@
+/* Foundry window content must be scrollable in V12 */
 .mwd-app .window-content {
   padding: 10px;
-  overflow: hidden;
+  overflow: auto; /* <<< FIX: was hidden */
 }
 
+/* Grid layout */
 .mwd-grid {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 10px;
-  height: 100%;
+
+  /* Important: allow children to shrink and scroll properly */
+  min-height: 0;
 }
 
-.mwd-left, .mwd-right {
+/* Allow both columns to scroll independently if content is tall */
+.mwd-left,
+.mwd-right {
+  min-height: 0;
   overflow: auto;
   padding-right: 6px;
 }
 
+/* Cards */
 .mwd-card {
   border: 1px solid var(--color-border-light-2);
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 10px;
-  background: rgba(0,0,0,0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .mwd-row {
@@ -64,12 +72,12 @@
   border-radius: 8px;
   padding: 8px;
   cursor: pointer;
-  background: rgba(0,0,0,0.02);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .mwd-region.active {
   outline: 2px solid var(--color-border-highlight);
-  background: rgba(0,0,0,0.05);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .mwd-derived {
@@ -83,11 +91,11 @@
   border-radius: 999px;
   padding: 4px 10px;
   display: inline-block;
-  background: rgba(0,0,0,0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .mwd-attitude.friendly { background: rgba(0, 128, 0, 0.12); }
-.mwd-attitude.neutral { background: rgba(128, 128, 0, 0.12); }
-.mwd-attitude.wary { background: rgba(255, 165, 0, 0.12); }
-.mwd-attitude.hostile { background: rgba(255, 0, 0, 0.12); }
+.mwd-attitude.neutral  { background: rgba(128, 128, 0, 0.12); }
+.mwd-attitude.wary     { background: rgba(255, 165, 0, 0.12); }
+.mwd-attitude.hostile  { background: rgba(255, 0, 0, 0.12); }
 .mwd-attitude.aggressive { background: rgba(128, 0, 0, 0.18); }
