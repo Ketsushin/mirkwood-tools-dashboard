@@ -1,0 +1,176 @@
+<form class="mwd-app">
+  <div class="mwd-grid">
+    <div class="mwd-left">
+      <div class="mwd-card">
+        <div class="mwd-row">
+          <label>{{localize "MWD.ActiveProfile"}}</label>
+          <select name="activeProfileId">
+            {{#each profiles}}
+              <option value="{{this.id}}" {{#if this.isActive}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="mwd-toolbar">
+          <button type="button" data-action="newProfile">{{localize "MWD.NewProfile"}}</button>
+          <button type="button" data-action="duplicateProfile">{{localize "MWD.DuplicateProfile"}}</button>
+          <button type="button" data-action="renameProfile">{{localize "MWD.RenameProfile"}}</button>
+          <button type="button" data-action="deleteProfile">{{localize "MWD.DeleteProfile"}}</button>
+        </div>
+        <div class="mwd-toolbar">
+          <button type="button" data-action="export">{{localize "MWD.Export"}}</button>
+          <button type="button" data-action="import">{{localize "MWD.Import"}}</button>
+        </div>
+
+        <hr/>
+
+        <div class="mwd-toolbar">
+          <button type="button" data-action="assignScene">{{localize "MWD.AssignToScene"}}</button>
+          <button type="button" data-action="clearScene">{{localize "MWD.ClearSceneAssignment"}}</button>
+        </div>
+        <p class="mwd-small">{{localize "MWD.SceneProfileHint"}}</p>
+      </div>
+
+      <div class="mwd-card">
+        <h3>{{localize "MWD.Globals"}}</h3>
+        <div class="mwd-row">
+          <label>{{localize "MWD.Shadow"}}</label>
+          <input type="number" name="globals.shadow" min="0" max="10" value="{{active.globals.shadow}}">
+        </div>
+        <div class="mwd-row">
+          <label>{{localize "MWD.War"}}</label>
+          <input type="number" name="globals.war" min="0" max="5" value="{{active.globals.war}}">
+        </div>
+      </div>
+
+      <div class="mwd-card">
+        <h3>{{localize "MWD.Params"}}</h3>
+
+        <div class="mwd-row">
+          <label>Preis pro Gefahrstufe (%)</label>
+          <input type="number" name="params.pricePerDanger" value="{{active.params.pricePerDanger}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Verfügbarkeit: Abzug pro Gefahrstufe</label>
+          <input type="number" name="params.availMinusPerDanger" value="{{active.params.availMinusPerDanger}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Verfügbarkeit: Bonus pro Versorgungspunkt</label>
+          <input type="number" name="params.availPlusPerSupply" value="{{active.params.availPlusPerSupply}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Schmuggel: +% pro Gefahrstufe</label>
+          <input type="number" name="params.smugglePerDanger" value="{{active.params.smugglePerDanger}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Schmuggel: +% pro Unruhe</label>
+          <input type="number" name="params.smugglePerUnrest" value="{{active.params.smugglePerUnrest}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Schmuggel: +% pro Krieg</label>
+          <input type="number" name="params.smugglePerWar" value="{{active.params.smugglePerWar}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Schmuggel: +% je Versorgung unter 3</label>
+          <input type="number" name="params.smugglePerSupplyBelow3" value="{{active.params.smugglePerSupplyBelow3}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Entdeckung: +% pro Gefahr</label>
+          <input type="number" name="params.detectPerDanger" value="{{active.params.detectPerDanger}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Entdeckung: +% pro Unruhe</label>
+          <input type="number" name="params.detectPerUnrest" value="{{active.params.detectPerUnrest}}">
+        </div>
+
+        <div class="mwd-row">
+          <label>Entdeckung: +% pro Krieg</label>
+          <input type="number" name="params.detectPerWar" value="{{active.params.detectPerWar}}">
+        </div>
+      </div>
+    </div>
+
+    <div class="mwd-right">
+      <div class="mwd-card">
+        <h3>{{localize "MWD.Regions"}}</h3>
+        <div class="mwd-toolbar">
+          <button type="button" data-action="addRegion">{{localize "MWD.AddRegion"}}</button>
+          <button type="button" data-action="removeRegion">{{localize "MWD.RemoveRegion"}}</button>
+        </div>
+
+        <div class="mwd-regions">
+          {{#each active.regions}}
+            <div class="mwd-region {{#if this.isActive}}active{{/if}}" data-region-id="{{this.id}}">
+              <strong>{{this.name}}</strong>
+              <div class="mwd-small">Gefahr {{this.danger}} | Unruhe {{this.unrest}} | Versorgung {{this.supply}}</div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{#if activeRegion}}
+      <div class="mwd-card">
+        <h3>{{localize "MWD.RegionDetails"}}</h3>
+        <div class="mwd-row">
+          <label>Name</label>
+          <input type="text" name="region.name" value="{{activeRegion.name}}">
+        </div>
+        <div class="mwd-row">
+          <label>{{localize "MWD.Danger"}}</label>
+          <input type="number" name="region.danger" min="0" max="5" value="{{activeRegion.danger}}">
+        </div>
+        <div class="mwd-row">
+          <label>{{localize "MWD.Unrest"}}</label>
+          <input type="number" name="region.unrest" min="0" max="5" value="{{activeRegion.unrest}}">
+        </div>
+        <div class="mwd-row">
+          <label>{{localize "MWD.Supply"}}</label>
+          <input type="number" name="region.supply" min="0" max="5" value="{{activeRegion.supply}}">
+        </div>
+        <div class="mwd-row">
+          <label>{{localize "MWD.Notes"}}</label>
+        </div>
+        <textarea name="region.notes" rows="4">{{activeRegion.notes}}</textarea>
+      </div>
+
+      <div class="mwd-card">
+        <h3>{{localize "MWD.Derived"}}</h3>
+        <div class="mwd-derived">
+          <div>
+            <div class="mwd-small">{{localize "MWD.PriceModifier"}}</div>
+            <div class="mwd-badge">{{derived.priceLabel}}</div>
+          </div>
+          <div>
+            <div class="mwd-small">{{localize "MWD.Availability"}}</div>
+            <div class="mwd-badge">{{derived.availLabel}}</div>
+          </div>
+          <div>
+            <div class="mwd-small">{{localize "MWD.SmuggleChance"}}</div>
+            <div class="mwd-badge">{{derived.smuggleLabel}}</div>
+          </div>
+          <div>
+            <div class="mwd-small">{{localize "MWD.SmuggleDetection"}}</div>
+            <div class="mwd-badge">{{derived.detectLabel}}</div>
+          </div>
+          <div style="grid-column: 1 / span 2;">
+            <div class="mwd-small">{{localize "MWD.NpcAttitude"}}</div>
+            <div class="mwd-badge mwd-attitude {{derived.attitudeClass}}">{{derived.attitudeLabel}}</div>
+            <div class="mwd-small">{{derived.attitudeReason}}</div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      <div class="mwd-toolbar">
+        <button type="submit">{{localize "MWD.Save"}}</button>
+      </div>
+    </div>
+  </div>
+</form>
