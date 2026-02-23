@@ -1,6 +1,6 @@
 {
-  "id": "mirkwood-world-dashboard",
-  "title": "Mirkwood World Dashboard",
+  "id": "mirkwood-tools-dashboard",
+  "title": "Mirkwood Tools Dashboard",
   "description": "GM-Weltzustands-Dashboard mit Profilen (Gondor/Wilderland/etc.), Regionen und automatischen Ableitungen (Preise, Verfügbarkeit, Schmuggel, NSC-Haltung).",
   "version": "1.0.0",
   "authors": [
@@ -20,7 +20,7 @@
     { "lang": "de", "name": "Deutsch", "path": "languages/de.json" },
     { "lang": "en", "name": "English", "path": "languages/en.json" }
   ],
-  "url": "https://github.com/Ketsushin/mirkwood-world-dashboard",
-  "manifest": "https://raw.githubusercontent.com/Ketsushin/mirkwood-world-dashboard/main/module.json",
-  "download": "https://github.com/Ketsushin/mirkwood-world-dashboard/releases/download/v1.0.0/mirkwood-world-dashboard-1.0.0.zip"
+  "url": "https://github.com/Ketsushin/mirkwood-tools-dashboard",
+  "manifest": "https://raw.githubusercontent.com/Ketsushin/mirkwood-tools-dashboard/main/module.json",
+  "download": "https://github.com/Ketsushin/mirkwood-tools-dashboard/releases/download/v1.0.0/mirkwood-tools-dashboard-1.0.0.zip"
 }
