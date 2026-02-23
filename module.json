@@ -1,14 +1,16 @@
 {
   "id": "mirkwood-tools-dashboard",
   "title": "Mirkwood Tools Dashboard",
-  "description": "GM-Weltzustands-Dashboard mit Profilen (Gondor/Wilderland/etc.), Regionen und automatischen Ableitungen (Preise, Verfügbarkeit, Schmuggel, NSC-Haltung).",
-  "version": "1.0.0",
+  "description": "GM-Weltzustands-Dashboard mit Profilen und automatischen Ableitungen.",
+  "version": "1.0.1",
   "authors": [
-    { "name": "Ketsushin + ChatGPT" }
+    {
+      "name": "Ketsushin"
+    }
   ],
   "compatibility": {
     "minimum": "11",
-    "verified": "12"
+    "verified": "13"
   },
   "esmodules": [
     "scripts/main.js"
@@ -17,10 +19,18 @@
     "styles/dashboard.css"
   ],
   "languages": [
-    { "lang": "de", "name": "Deutsch", "path": "languages/de.json" },
-    { "lang": "en", "name": "English", "path": "languages/en.json" }
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "languages/de.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
   ],
   "url": "https://github.com/Ketsushin/mirkwood-tools-dashboard",
   "manifest": "https://raw.githubusercontent.com/Ketsushin/mirkwood-tools-dashboard/main/module.json",
-  "download": "https://github.com/Ketsushin/mirkwood-tools-dashboard/releases/download/v1.0.0/mirkwood-tools-dashboard-1.0.0.zip"
+  "download": "https://github.com/Ketsushin/mirkwood-tools-dashboard/releases/download/v1.0.1/mirkwood-tools-dashboard-1.0.1.zip"
 }
